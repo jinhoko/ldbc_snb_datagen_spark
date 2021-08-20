@@ -47,14 +47,19 @@ object GenerationStage extends SparkApp with Logging {
 
     val merged = SparkKnowsMerger(uniKnows, interestKnows, randomKnows).cache()
 
-    SparkUI.job(simpleNameOf[SparkActivitySerializer.type], "serialize person activities") {
-      SparkActivitySerializer(merged, randomRanker, config, Some(numPartitions), oversizeFactor)
-    }
+    // FIXME jhko commented this
+    // SparkUI.job(simpleNameOf[SparkActivitySerializer.type], "serialize person activities") {
+    //   SparkActivitySerializer(merged, randomRanker, config, Some(numPartitions), oversizeFactor)
+    // }
 
+    // FIXME jinho add debug
+    println("start serialize person")
     SparkUI.job(simpleNameOf[SparkPersonSerializer.type ], "serialize persons") {
       SparkPersonSerializer(merged, config, Some(numPartitions), oversizeFactor)
     }
 
+    // FIXME jinho add debug
+    println("start serialize static graph")
     SparkUI.job(simpleNameOf[SparkStaticGraphSerializer.type], "serialize static graph") {
       SparkStaticGraphSerializer(config, Some(numPartitions))
     }
